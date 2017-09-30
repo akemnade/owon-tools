@@ -2,7 +2,9 @@
 
 void print_measurement(MeasurementResult res)
 {
-	stdout.printf("measure: %s\n", res.print_value());
+	Posix.timeval tv = Posix.timeval();
+	tv.get_time_of_day();
+	stdout.printf("%ld measure: %s\n", tv.tv_sec, res.print_value());
 
 }
 
