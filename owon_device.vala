@@ -14,7 +14,23 @@
 public class OwonDevice : GLib.Object {
 	org.bluez.GattCharacteristic1 [] chars;
 	org.bluez.Device1 device;
+	public enum Button {
+		SELECT = 1,
+		RANGE = 2,
+		HOLD_LIGHT = 3,
+		DELTA_BT = 4,
+		HZ_DUTY = 5,
+		MAX_MIN = 6
+	}
+
 	public const string uuid = "0000fff0-0000-1000-8000-00805f9b34fb";
+
+	public void press_button(Button b, int times) throws IOError
+	{
+		uint8[] packet = {(uint8) b, (uint8)times};
+		chars[2].write_value(packet, new HashTable<string, Variant>(str_hash, str_equal));
+	}
+
 	public void start_measure() throws IOError {
 		chars[3].start_notify();
 	}

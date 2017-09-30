@@ -16,8 +16,8 @@ namespace org {
 		[DBus (name = "org.bluez.GattCharacteristic1", timeout = 120000)]
 		public interface GattCharacteristic1 : GLib.Object {
 			
-			public abstract uint8[] read_value(GLib.HashTable<string, Variant> options) throws DBusError;
-			public abstract void write_value(uint8[] value, GLib.HashTable<string, Variant> options) throws DBusError;
+			public abstract uint8[] read_value(GLib.HashTable<string, Variant> options) throws IOError;
+			public abstract void write_value(uint8[] value, GLib.HashTable<string, Variant> options) throws IOError;
 			public abstract void start_notify() throws IOError;
 			public abstract void stop_notify() throws IOError;
 			public abstract string u_u_i_d { owned get; set; }
