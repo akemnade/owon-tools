@@ -60,7 +60,7 @@ public void register_profile(DBusConnection conn, string uuid)
 /*	conn.register_object("/",
 						 new FDObjectManager(gattprof));
 */	
-	manager.register_application(new ObjectPath("/org/ak/owonmulti"),
-								 new GLib.HashTable<string, GLib.Value?>(GLib.str_hash, GLib.str_equal)); 
+	manager.register_application.begin(new ObjectPath("/org/ak/owonmulti"),
+									   new GLib.HashTable<string, GLib.Value?>(GLib.str_hash, GLib.str_equal)); 
 	
 }
