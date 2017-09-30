@@ -96,7 +96,7 @@ public class OwonManager {
 					string uuidstr = uuidvar.get_string();
 					if (uuidstr == null)
 						continue;
-					stdout.printf("char uuid: %s\n", uuidstr);
+					//stdout.printf("char uuid: %s\n", uuidstr);
 					uuidstr = uuidstr[4:8];
 					if (uuidstr == "fff1")
 						charpaths[0] = objpath;
