@@ -44,6 +44,55 @@ public class OwonManager {
 		vstr = v.get_string();
 		return vstr;
 	}
+
+	public async bool search_and_connect() {
+		if (conn == null) {
+			conn = Bus.get_sync(BusType.SYSTEM);
+		}
+		org.bluez.Adapter1 adapter = conn.get_proxy_sync("org.bluez", "/org/bluez/hci0");
+		if (adapter != null) {
+			try {
+				adapter.start_discovery();
+			} catch (IOError e) {
+				stderr.printf("discover error %s\n", e.message);
+			}
+		}
+		discover();
+		if (objs == null)
+			return false;
+		string [] devlist = {};
+		objs.foreach((objpath, interfaces) => {
+				do {
+					var devprops = interfaces["org.bluez.Device1"];
+					if (devprops == null)
+						break;
+					var name_var = devprops["Name"];
+					if (name_var == null)
+						break;
+					string name_str = name_var.get_string();
+					if (name_str == null)
+						break;
+					if (devprops["RSSI"] == null)
+						break;
+					string name_first = name_str[0:4];
+					if ((name_str != "LILLIPUT") && (name_first != "OWON"))
+						break;
+					devlist += objpath;
+				} while(false);
+			});
+		if (devlist.length > 0) {
+			try {
+			org.bluez.Device1 dev = yield conn.get_proxy("org.bluez", devlist[0]);
+			stderr.printf("Connecting to %s %s\n", dev.address, dev.name);
+			yield dev.connect();
+			} catch(IOError e) {
+				stderr.printf("connecting error: %s\n", e.message);
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
 	
 	public OwonDevice? get_known(string? addr = null) throws IOError {
 		if (objs == null) {

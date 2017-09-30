@@ -43,10 +43,10 @@ namespace org {
 		[DBus (name = "org.bluez.Device1", timeout = 120000)]
 		public interface Device1 : GLib.Object {
 			public abstract void disconnect() throws IOError;
-			public abstract void connect() throws IOError;
+			public abstract async void connect() throws IOError;
 			public abstract void connect_profile(string UUID) throws IOError;
 			public abstract void disconnect_profile(string UUID) throws IOError;
-			public abstract void pair() throws IOError;
+			public abstract async void pair() throws IOError;
 			public abstract void cancel_pairing() throws IOError;
 			public abstract string address { owned get; set; }
 			public abstract string name { owned get; set; }
@@ -68,6 +68,26 @@ namespace org {
 			public abstract GLib.HashTable<string, GLib.Variant> service_data { owned get; set; }
 			public abstract int16 tx_power {  get; set; }
 			public abstract bool services_resolved {  get; set; }
+		}
+
+		[DBus (name = "org.bluez.Adapter1", timeout = 120000)]
+		public interface Adapter1 : GLib.Object {
+			public abstract void start_discovery() throws GLib.IOError;
+			public abstract void set_discovery_filter(GLib.HashTable<string, GLib.Variant> properties) throws IOError;
+			public abstract void stop_discovery() throws GLib.IOError;
+			public abstract void remove_device(GLib.ObjectPath device) throws GLib.IOError;
+			public abstract string address { owned get; set; }
+			public abstract string name { owned get; set; }
+			public abstract string alias { owned get; set; }
+			public abstract uint class_ {  get; set; }
+			public abstract bool powered {  get; set; }
+			public abstract bool discoverable {  get; set; }
+			public abstract uint discoverable_timeout {  get; set; }
+			public abstract bool pairable {  get; set; }
+			public abstract uint pairable_timeout {  get; set; }
+			public abstract bool discovering {  get; set; }
+			public abstract string[] u_u_i_ds { owned get; set; }
+            public abstract string modalias { owned get; set; }
 		}
 
 	}
