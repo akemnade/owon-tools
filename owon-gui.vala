@@ -15,6 +15,7 @@ public class OwonDisplay : Gtk.Window {
 	Gtk.Button connectbutton;
 	bool searching;
 	Gtk.Label measurementlabel;
+	Gtk.Label buttonstatuslabel;
 	OwonDevice owon_dev;
 	OwonManager owon_manager;
 	Gtk.Button owon_select;
@@ -27,6 +28,30 @@ public class OwonDisplay : Gtk.Window {
 
 	void display_measurement(MeasurementResult res) {
 		measurementlabel.set_text(res.print_value());
+		string [] status = {};
+		if (res.autorange)
+			status += "AUTO";
+		if (res.max)
+			status += "MAX";
+		if (res.min)
+			status += "MIN";
+		if (res.hold)
+			status += "H";
+		if (res.delta)
+			status += "delta";
+		if (res.beepmode)
+			status += "beep";
+		if (res.diode)
+			status += "diode";
+		StringBuilder b = new StringBuilder();
+		if (status.length > 0)
+			b.assign(status[0]);
+		for(int i = 1; i < status.length; i++) {
+			b.append_c(' ');
+			b.append(status[i]);
+			
+		}
+		buttonstatuslabel.set_text(b.str);
 	}
 	
 	void get_connected() {
@@ -104,6 +129,8 @@ public class OwonDisplay : Gtk.Window {
 		
 		measurementlabel = new Gtk.Label("not connected");
 		vbox.pack_start(measurementlabel, true ,true, 0);
+		buttonstatuslabel = new Gtk.Label("");
+		vbox.pack_start(buttonstatuslabel, false, true, 0);
 		var hboxbottom = new Gtk.HBox(false, 0);
 		vbox.pack_start(hboxbottom, false, false, 0);
 		search = new Gtk.Button.with_label("Search");
