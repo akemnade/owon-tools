@@ -96,6 +96,17 @@ public class OwonDisplay : Gtk.Window {
 		if (owon_dev != null)
 			owon_dev.press_button(OwonDevice.Button.MAX_MIN, 1);
 	}
+
+	void search_and_connect() {
+		search.set_sensitive(false);
+		owon_manager.search_and_connect((obj, res) => {
+				owon_dev = null;
+				if (owon_manager.search_and_connect.end(res)) {
+					get_connected();
+				}
+				search.set_sensitive(true);
+			});
+	}
 	
 	public OwonDisplay() {
 //		base(Gtk.WindowType.TOPLEVEL);
@@ -134,6 +145,8 @@ public class OwonDisplay : Gtk.Window {
 		var hboxbottom = new Gtk.HBox(false, 0);
 		vbox.pack_start(hboxbottom, false, false, 0);
 		search = new Gtk.Button.with_label("Search");
+		search.clicked.connect(search_and_connect);
+
 		hboxbottom.pack_start(search, false, false, 0);
 		
 		owon_manager = new OwonManager();
