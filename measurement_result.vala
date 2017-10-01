@@ -23,7 +23,8 @@ result format
    10 = DC
    20 = Auto
    01 = running
-   04 = hold
+   02 = hold
+   04 = delta
 
 8: 20 = MAX
    10 = MIN
@@ -64,7 +65,10 @@ public class MeasurementResult : GLib.Object {
 	public bool max;
 	public bool min;
 	public bool hold;
+	public bool delta;
+	public bool diode;
 	public bool running;
+	public bool beepmode;
 	public int bars;
 	[CCode (cheader_filename = "math.h", cname = "pow10")]
 	static extern double pow10(double y);
@@ -77,10 +81,13 @@ public class MeasurementResult : GLib.Object {
 		}
 		max = 0 != (data[8] & 0x20);
 		min = 0 != (data[8] & 0x10);
-		hold = 0 != (data[7] & 0x04);
+		hold = 0 != (data[7] & 0x02);
+		delta = 0 != (data[7] & 0x04);
 		running = 0 != (data[7] & 0x01);
 		negative = data[0] == '-';
 		autorange = 0 != (data[7] & 0x20);
+		diode = 0 != (data[9] & 0x04);
+		beepmode = 0 != (data[9] & 0x08);
 		bars = data[11] & 0x3f;
 		nan = (data[1] == '?');
 		switch(data[9] & 0xf0) {
