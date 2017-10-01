@@ -15,8 +15,8 @@ public class OwonDisplay : Gtk.Window {
 	Gtk.Button connectbutton;
 	bool searching;
 	Gtk.Label measurementlabel;
-	OwonDevice owondev;
-	OwonManager owonmanager;
+	OwonDevice owon_dev;
+	OwonManager owon_manager;
 	Gtk.Button owon_select;
 	Gtk.Button owon_range;
 	Gtk.Button owon_hold;
@@ -31,15 +31,45 @@ public class OwonDisplay : Gtk.Window {
 	
 	void get_connected() {
 		try {
-			owonmanager.discover();
-			owondev = owonmanager.get_known();
-			if (owondev != null) {
-				owondev.got_measurement.connect(display_measurement);
-				owondev.start_measure();
+			owon_manager.discover();
+			owon_dev = owon_manager.get_known();
+			if (owon_dev != null) {
+				owon_dev.got_measurement.connect(display_measurement);
+				owon_dev.start_measure();
 			}
 		} catch (IOError e) {
 			measurementlabel.set_text("error getting device:\n%s".printf(e.message)); 
 		}
+	}
+
+	void select_clicked() {
+		if (owon_dev != null)
+			owon_dev.press_button(OwonDevice.Button.SELECT, 1);
+	}
+
+	void range_clicked() {
+		if (owon_dev != null)
+			owon_dev.press_button(OwonDevice.Button.RANGE, 1);
+	}
+
+	void hold_clicked() {
+		if (owon_dev != null)
+			owon_dev.press_button(OwonDevice.Button.HOLD_LIGHT, 1);
+	}
+
+	void delta_clicked() {
+		if (owon_dev != null)
+			owon_dev.press_button(OwonDevice.Button.DELTA_BT, 1);
+	}
+	
+	void hz_duty_clicked() {
+		if (owon_dev != null)
+			owon_dev.press_button(OwonDevice.Button.HZ_DUTY, 1);
+	}
+
+	void max_min_clicked() {
+		if (owon_dev != null)
+			owon_dev.press_button(OwonDevice.Button.MAX_MIN, 1);
 	}
 	
 	public OwonDisplay() {
@@ -50,16 +80,28 @@ public class OwonDisplay : Gtk.Window {
 		vbox.pack_start(hboxtop, false, true,0);
 		owon_select = new Gtk.Button.with_label("Select");
 		hboxtop.pack_start(owon_select, true, true, 0);
+		owon_select.clicked.connect(select_clicked);
+
 		owon_range = new Gtk.Button.with_label("Range");
 		hboxtop.pack_start(owon_range, true, true, 0);
+		owon_range.clicked.connect(range_clicked);
+		
 		owon_hold = new Gtk.Button.with_label("Hold");
 		hboxtop.pack_start(owon_hold, true, true, 0);
+		owon_hold.clicked.connect(hold_clicked);
+		
 		owon_delta = new Gtk.Button.with_label("Delta");
 		hboxtop.pack_start(owon_delta, true, true, 0);
+		owon_delta.clicked.connect(delta_clicked);
+
 		owon_hz_duty = new Gtk.Button.with_label("Hz/Duty");
 		hboxtop.pack_start(owon_hz_duty, true, true, 0);
+		owon_hz_duty.clicked.connect(hz_duty_clicked);
+		
 		owon_maxmin = new Gtk.Button.with_label("Max/Min");
 		hboxtop.pack_start(owon_maxmin, true, true, 0);
+		owon_maxmin.clicked.connect(max_min_clicked);
+		
 		measurementlabel = new Gtk.Label("not connected");
 		vbox.pack_start(measurementlabel, true ,true, 0);
 		var hboxbottom = new Gtk.HBox(false, 0);
@@ -67,8 +109,9 @@ public class OwonDisplay : Gtk.Window {
 		search = new Gtk.Button.with_label("Search");
 		hboxbottom.pack_start(search, false, false, 0);
 		
-		owonmanager = new OwonManager();
-
+		owon_manager = new OwonManager();
+		
+		
 		get_connected();
 	}
 }
