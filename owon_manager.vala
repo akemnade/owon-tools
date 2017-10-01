@@ -13,7 +13,7 @@
 [DBus (name = "org.freedesktop.DBus.ObjectManager")]
 interface ObjectManagerCl : Object {
         
-	public abstract HashTable<GLib.ObjectPath,HashTable<string,HashTable<string,Variant>>> get_managed_objects(); 
+	public abstract HashTable<GLib.ObjectPath,HashTable<string,HashTable<string,Variant>>> get_managed_objects() throws IOError; 
        
 }
 
